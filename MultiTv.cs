@@ -3,6 +3,7 @@ using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
@@ -12,6 +13,7 @@ namespace MultiTv
     {
         void NotifyAllIsolated(bool isIsolated, int sourceInstanceId);
         bool TryRestoreControl(VideoControl control);
+        void AddVideoControlToDynamicTable(TableLayoutPanel panel, VideoControl vc);
     }
     public interface IVideoControl
     {
@@ -1766,7 +1768,6 @@ namespace MultiTv
         {
             this.mediaPlayer.Volume += 10;
         }
-
         internal void VolumeDown()
         {
             this.mediaPlayer.Volume -= 10;
@@ -1847,6 +1848,44 @@ namespace MultiTv
                 }
             }
             return false;
+        }
+
+        public void AddVideoControlToDynamicTable(TableLayoutPanel panel, VideoControl vc)
+        {
+            if (panel.ColumnCount == 2 && panel.RowCount == 2 && panel.Controls.Count >= 4)
+            {
+                var controls = panel.Controls.Cast<Control>().ToList();
+                panel.Controls.Clear();
+
+                panel.ColumnCount = 4;
+                panel.RowCount = (int)Math.Ceiling(controls.Count / 4.0);
+
+                for (int i = 0; i < controls.Count; i++)
+                {
+                    int row = i / 4;
+                    int col = i % 4;
+                    panel.Controls.Add(controls[i], col, row);
+                }
+            }
+
+            int currentCapacity = panel.RowCount * panel.ColumnCount;
+            if (panel.Controls.Count >= currentCapacity)
+            {
+                panel.RowCount++;
+                panel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+            }
+
+            for (int row = 0; row < panel.RowCount; row++)
+            {
+                for (int col = 0; col < panel.ColumnCount; col++)
+                {
+                    if (panel.GetControlFromPosition(col, row) == null)
+                    {
+                        panel.Controls.Add(vc, col, row);
+                        return;
+                    }
+                }
+            }
         }
     }
 }
