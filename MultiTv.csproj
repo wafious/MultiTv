@@ -119,12 +119,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MultiTv.cs" />
+    <Compile Include="LibVlc.cs" />
+    <Compile Include="MultiTv.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="MultiTv.Designer.cs">
       <DependentUpon>MultiTv.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RecordingDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="SelectURL.cs">
       <SubType>Form</SubType>
     </Compile>
